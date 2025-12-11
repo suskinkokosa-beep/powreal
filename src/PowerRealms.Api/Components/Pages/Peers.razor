@@ -1,0 +1,110 @@
+@page "/peers"
+@inject IP2PNode P2PNode
+
+<h1>P2P Network</h1>
+
+<div class="connect-section">
+    <h2>Connect to Peer</h2>
+    <div class="connect-form">
+        <input type="text" @bind="newPeerEndpoint" placeholder="IP:Port (e.g. 192.168.1.100:5001)" class="input-field" />
+        <button @onclick="ConnectToPeer" class="btn btn-primary" disabled="@isConnecting">
+            @(isConnecting ? "Connecting..." : "Connect")
+        </button>
+    </div>
+    @if (!string.IsNullOrEmpty(statusMessage))
+    {
+        <p class="status-message @statusClass">@statusMessage</p>
+    }
+</div>
+
+<div class="peers-section">
+    <h2>Connected Peers (@peers.Count())</h2>
+    @if (!peers.Any())
+    {
+        <p class="no-data">No peers connected. Add a peer endpoint above to connect.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Node ID</th>
+                    <th>Endpoint</th>
+                    <th>Last Seen</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var peer in peers)
+                {
+                    <tr>
+                        <td>@peer.NodeId.ToString()[..8]...</td>
+                        <td>@peer.Endpoint</td>
+                        <td>@peer.LastSeen.ToString("HH:mm:ss")</td>
+                        <td><span class="status-badge @(peer.IsOnline ? "online" : "offline")">@(peer.IsOnline ? "Online" : "Offline")</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div class="info-section">
+    <h2>How to Connect</h2>
+    <ol>
+        <li>Run Power Realms on another PC</li>
+        <li>Find its IP address (e.g. 192.168.1.100)</li>
+        <li>Enter IP:5001 in the field above</li>
+        <li>Click Connect</li>
+    </ol>
+</div>
+
+@code {
+    private IEnumerable<PeerInfo> peers = new List<PeerInfo>();
+    private string newPeerEndpoint = "";
+    private string statusMessage = "";
+    private string statusClass = "";
+    private bool isConnecting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshPeers();
+    }
+
+    private async Task RefreshPeers()
+    {
+        peers = await P2PNode.GetPeersAsync();
+    }
+
+    private async Task ConnectToPeer()
+    {
+        if (string.IsNullOrWhiteSpace(newPeerEndpoint))
+        {
+            statusMessage = "Please enter a valid endpoint";
+            statusClass = "error";
+            return;
+        }
+
+        isConnecting = true;
+        statusMessage = "";
+        
+        try
+        {
+            await P2PNode.ConnectToPeerAsync(newPeerEndpoint);
+            statusMessage = $"Connection initiated to {newPeerEndpoint}";
+            statusClass = "success";
+            newPeerEndpoint = "";
+            await Task.Delay(1000);
+            await RefreshPeers();
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Failed to connect: {ex.Message}";
+            statusClass = "error";
+        }
+        finally
+        {
+            isConnecting = false;
+        }
+    }
+}

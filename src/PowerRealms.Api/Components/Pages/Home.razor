@@ -1,0 +1,69 @@
+@page "/"
+@inject IP2PNode P2PNode
+@inject PowerRealms.Api.Data.PowerRealmsDbContext DbContext
+
+<h1>Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Node ID</h3>
+        <p class="stat-value">@P2PNode.NodeId.ToString()[..8]...</p>
+    </div>
+    <div class="stat-card">
+        <h3>Connected Peers</h3>
+        <p class="stat-value">@peersCount</p>
+    </div>
+    <div class="stat-card">
+        <h3>Registered Nodes</h3>
+        <p class="stat-value">@nodesCount</p>
+    </div>
+    <div class="stat-card">
+        <h3>Active Pools</h3>
+        <p class="stat-value">@poolsCount</p>
+    </div>
+</div>
+
+<div class="info-section">
+    <h2>Node Information</h2>
+    <table class="info-table">
+        <tr>
+            <td>Full Node ID:</td>
+            <td>@P2PNode.NodeId</td>
+        </tr>
+        <tr>
+            <td>API Port:</td>
+            <td>5000</td>
+        </tr>
+        <tr>
+            <td>P2P Port:</td>
+            <td>5001</td>
+        </tr>
+        <tr>
+            <td>Database:</td>
+            <td>SQLite (Embedded)</td>
+        </tr>
+    </table>
+</div>
+
+<div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="/peers" class="btn btn-primary">Connect to Peer</a>
+        <a href="/nodes" class="btn btn-secondary">Register Node</a>
+        <a href="/pools" class="btn btn-secondary">Create Pool</a>
+    </div>
+</div>
+
+@code {
+    private int peersCount = 0;
+    private int nodesCount = 0;
+    private int poolsCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var peers = await P2PNode.GetPeersAsync();
+        peersCount = peers.Count();
+        nodesCount = DbContext.Nodes.Count();
+        poolsCount = DbContext.Pools.Count();
+    }
+}

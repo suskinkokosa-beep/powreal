@@ -1,0 +1,20 @@
+@inherits LayoutComponentBase
+
+<div class="app-container">
+    <nav class="sidebar">
+        <div class="logo">
+            <h2>Power Realms</h2>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/nodes">Nodes</a></li>
+            <li><a href="/pools">Pools</a></li>
+            <li><a href="/marketplace">Marketplace</a></li>
+            <li><a href="/peers">P2P Network</a></li>
+            <li><a href="/settings">Settings</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        @Body
+    </main>
+</div>

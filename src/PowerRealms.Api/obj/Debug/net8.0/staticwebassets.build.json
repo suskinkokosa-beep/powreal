@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "PliOEPDGwg3IKXJ9mMr6okEiw7qc4MSPg3tzXDFyX1I=",
+  "Source": "PowerRealms.Api",
+  "BasePath": "_content/PowerRealms.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "PowerRealms.Api/wwwroot",
+      "Source": "PowerRealms.Api",
+      "ContentRoot": "/home/runner/workspace/src/PowerRealms.Api/wwwroot/",
+      "BasePath": "_content/PowerRealms.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

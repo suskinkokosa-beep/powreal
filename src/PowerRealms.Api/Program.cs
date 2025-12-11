@@ -1,9 +1,11 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PowerRealms.Api.Data;
+using PowerRealms.Api.P2P;
 using PowerRealms.Api.Repositories;
 using PowerRealms.Api.Services;
 
@@ -21,10 +23,10 @@ builder.Services.AddSwaggerGen(c => {
     c.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, new[] { "Bearer" } } });
 });
 
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<PowerRealmsDbContext>(opt => opt.UseNpgsql(conn));
+var dbPath = configuration.GetValue<string>("Database:Path") ?? "powerrealms.db";
+var connectionString = $"Data Source={dbPath}";
+builder.Services.AddDbContext<PowerRealmsDbContext>(opt => opt.UseSqlite(connectionString));
 
-// Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPoolRepository, PoolRepository>();
 builder.Services.AddScoped<ILedgerRepository, LedgerRepository>();
@@ -34,7 +36,9 @@ builder.Services.AddScoped<IGameSessionRepository, GameSessionRepository>();
 builder.Services.AddScoped<IPoolMemberRepository, PoolMemberRepository>();
 builder.Services.AddScoped<IWithdrawalRepository, WithdrawalRepository>();
 
-// Services
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILedgerService, LedgerService>();
 builder.Services.AddScoped<IHoldService, HoldService>();
@@ -43,8 +47,14 @@ builder.Services.AddScoped<IMarketplaceService, MarketplaceService>();
 builder.Services.AddScoped<IGameBoostService, GameBoostService>();
 builder.Services.AddScoped<IPoolManagementService, PoolManagementService>();
 builder.Services.AddScoped<IWithdrawalService, WithdrawalService>();
+builder.Services.AddScoped<IDisputeService, DisputeService>();
+builder.Services.AddScoped<INodeService, NodeService>();
+builder.Services.AddScoped<IBalanceService, BalanceService>();
 
-// JWT Auth
+var p2pNode = new P2PNode();
+builder.Services.AddSingleton<IP2PNode>(p2pNode);
+builder.Services.AddScoped<ISyncService, SyncService>();
+
 var jwtSection = configuration.GetSection("Jwt");
 var key = jwtSection.GetValue<string>("Key");
 if (string.IsNullOrEmpty(key)) throw new InvalidOperationException("Jwt:Key is not configured");
@@ -63,10 +73,16 @@ builder.Services.AddAuthentication(options => {
 });
 builder.Services.AddAuthorization();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options => {
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope()) {
     var db = scope.ServiceProvider.GetRequiredService<PowerRealmsDbContext>();
-    db.Database.Migrate();
+    db.Database.EnsureCreated();
 
     var userRepo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
     var seed = configuration.GetSection("SeedAdmin");
@@ -88,13 +104,25 @@ using (var scope = app.Services.CreateScope()) {
     }
 }
 
-if (app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+var p2pPort = configuration.GetValue<int>("P2P:Port", 5001);
+await p2pNode.StartAsync(p2pPort);
+
+var bootstrapPeers = configuration.GetSection("P2P:BootstrapPeers").Get<string[]>();
+if (bootstrapPeers != null)
+{
+    foreach (var peer in bootstrapPeers)
+    {
+        _ = p2pNode.ConnectToPeerAsync(peer);
+    }
 }
 
-app.UseHttpsRedirection();
+app.Lifetime.ApplicationStopping.Register(() => p2pNode.StopAsync().Wait());
+
+app.UseForwardedHeaders();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.Run();
+app.Run("http://0.0.0.0:5000");

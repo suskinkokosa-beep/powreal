@@ -1,0 +1,77 @@
+{
+  "General": {
+    "AppName": "Power Realms",
+    "Welcome": "Welcome to Power Realms",
+    "Success": "Operation completed successfully",
+    "Error": "An error occurred",
+    "NotFound": "Resource not found",
+    "Unauthorized": "You are not authorized to perform this action",
+    "ValidationError": "Validation error"
+  },
+  "Auth": {
+    "LoginSuccess": "Login successful",
+    "LoginFailed": "Invalid username or password",
+    "RegisterSuccess": "Registration successful",
+    "UserExists": "User already exists",
+    "InvalidCredentials": "Invalid credentials"
+  },
+  "Pool": {
+    "Created": "Pool created successfully",
+    "Joined": "Successfully joined the pool",
+    "NotFound": "Pool not found",
+    "AccessDenied": "You do not have access to this pool",
+    "AlreadyMember": "You are already a member of this pool",
+    "InvalidPassword": "Invalid pool password",
+    "MachineLimit": "Machine limit reached",
+    "Types": {
+      "Public": "Public",
+      "Private": "Private",
+      "Premium": "Premium"
+    }
+  },
+  "Withdrawal": {
+    "Requested": "Withdrawal request submitted",
+    "Confirmed": "Withdrawal confirmed",
+    "Rejected": "Withdrawal rejected",
+    "Completed": "Withdrawal completed",
+    "InsufficientBalance": "Insufficient balance",
+    "InvalidAmount": "Invalid withdrawal amount",
+    "PendingApproval": "Withdrawal pending approval"
+  },
+  "GameBoost": {
+    "SessionStarted": "GameBoost session started",
+    "SessionEnded": "GameBoost session ended",
+    "NodeNotAvailable": "Node is not available",
+    "SlotNotAvailable": "GameBoost slot not available",
+    "PartialRefund": "Partial refund issued due to quality issues",
+    "QualityMetrics": {
+      "Latency": "Latency",
+      "FPS": "Frames per second",
+      "Uptime": "Uptime percentage"
+    }
+  },
+  "Marketplace": {
+    "OfferCreated": "Offer created successfully",
+    "OfferPurchased": "Offer purchased successfully",
+    "OfferNotFound": "Offer not found",
+    "InsufficientFunds": "Insufficient funds",
+    "Categories": {
+      "ComputeTime": "Compute Time",
+      "GameBoostSlot": "GameBoost Slot",
+      "PrivateAccess": "Private Slot Access",
+      "Cosmetics": "Cosmetics"
+    }
+  },
+  "Hold": {
+    "Created": "Hold created",
+    "Released": "Hold released",
+    "Cancelled": "Hold cancelled",
+    "Pending": "Hold pending"
+  },
+  "Roles": {
+    "GlobalAdmin": "Global Admin",
+    "Owner": "Pool Owner",
+    "Officer": "Officer",
+    "Member": "Member"
+  }
+}
