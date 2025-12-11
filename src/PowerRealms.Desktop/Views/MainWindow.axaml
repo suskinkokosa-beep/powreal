@@ -1,0 +1,264 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PowerRealms.Desktop.ViewModels"
+        x:Class="PowerRealms.Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="Power Realms - P2P Network"
+        Width="1200" Height="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid ColumnDefinitions="220,*">
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="#0f3460" Padding="15">
+            <StackPanel>
+                <TextBlock Text="Power Realms" FontSize="22" FontWeight="Bold" Foreground="#e94560" Margin="0,0,0,30"/>
+                
+                <StackPanel Margin="0,0,0,20">
+                    <TextBlock Text="Язык / Language" Foreground="Gray" FontSize="12" Margin="0,0,0,5"/>
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Button Content="RU" Command="{Binding SwitchLanguageCommand}" CommandParameter="ru" Classes="secondary" Padding="10,5"/>
+                        <Button Content="EN" Command="{Binding SwitchLanguageCommand}" CommandParameter="en" Classes="secondary" Padding="10,5"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <ListBox SelectedIndex="{Binding SelectedTabIndex}" Background="Transparent" BorderThickness="0">
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="📊" FontSize="16"/>
+                            <TextBlock Text="Dashboard"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="🌐" FontSize="16"/>
+                            <TextBlock Text="P2P Network"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="💻" FontSize="16"/>
+                            <TextBlock Text="Nodes"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="🏊" FontSize="16"/>
+                            <TextBlock Text="Pools"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+                <StackPanel VerticalAlignment="Bottom" Margin="0,50,0,0">
+                    <Border Classes="stat-card" Margin="0,5">
+                        <StackPanel>
+                            <TextBlock Text="Status" Foreground="Gray" FontSize="11"/>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Ellipse Width="10" Height="10" Fill="{Binding StatusColor}"/>
+                                <TextBlock Text="{Binding StatusText}" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <Border Grid.Column="1" Padding="20">
+            <TabControl SelectedIndex="{Binding SelectedTabIndex}" TabStripPlacement="Top">
+                <TabControl.ItemContainerTheme>
+                    <ControlTheme TargetType="TabItem" x:DataType="TabItem">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </ControlTheme>
+                </TabControl.ItemContainerTheme>
+
+                <!-- Dashboard Tab -->
+                <TabItem>
+                    <ScrollViewer>
+                        <StackPanel Spacing="20">
+                            <TextBlock Text="Dashboard" Classes="title"/>
+                            
+                            <WrapPanel>
+                                <Border Classes="stat-card">
+                                    <StackPanel>
+                                        <TextBlock Text="Node ID" Foreground="Gray" FontSize="12"/>
+                                        <TextBlock Text="{Binding NodeId}" FontSize="11" TextWrapping="Wrap" MaxWidth="200"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Classes="stat-card">
+                                    <StackPanel>
+                                        <TextBlock Text="Connected Peers" Foreground="Gray" FontSize="12"/>
+                                        <TextBlock Text="{Binding PeersCount}" FontSize="28" FontWeight="Bold" Foreground="#e94560"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Classes="stat-card">
+                                    <StackPanel>
+                                        <TextBlock Text="Registered Nodes" Foreground="Gray" FontSize="12"/>
+                                        <TextBlock Text="{Binding NodesCount}" FontSize="28" FontWeight="Bold" Foreground="#e94560"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Classes="stat-card">
+                                    <StackPanel>
+                                        <TextBlock Text="Active Pools" Foreground="Gray" FontSize="12"/>
+                                        <TextBlock Text="{Binding PoolsCount}" FontSize="28" FontWeight="Bold" Foreground="#e94560"/>
+                                    </StackPanel>
+                                </Border>
+                            </WrapPanel>
+
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="Quick Actions" FontSize="16" FontWeight="Bold"/>
+                                    <WrapPanel>
+                                        <Button Content="Refresh" Command="{Binding RefreshCommand}" Classes="primary" Margin="5"/>
+                                        <Button Content="Register Node" Command="{Binding RegisterNodeCommand}" Classes="secondary" Margin="5"/>
+                                        <Button Content="Create Pool" Command="{Binding CreatePoolCommand}" Classes="secondary" Margin="5"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="card">
+                                <StackPanel>
+                                    <TextBlock Text="Status" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{Binding StatusMessage}" Foreground="#00ff00" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- P2P Network Tab -->
+                <TabItem>
+                    <ScrollViewer>
+                        <StackPanel Spacing="20">
+                            <TextBlock Text="P2P Network" Classes="title"/>
+                            
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="Connect to Peer" FontSize="16" FontWeight="Bold"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBox Text="{Binding PeerEndpoint}" Watermark="IP:Port (e.g. 192.168.1.100:5001)" Width="300"/>
+                                        <Button Content="Connect" Command="{Binding ConnectPeerCommand}" Classes="primary"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="Connected Peers" FontSize="16" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding PeersCount, StringFormat='({0})'}" Foreground="Gray"/>
+                                    </StackPanel>
+                                    <ListBox ItemsSource="{Binding Peers}" MaxHeight="300">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="*,*,*">
+                                                    <TextBlock Grid.Column="0" Text="{Binding NodeId}" FontSize="12"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Endpoint}"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding StatusText}" Foreground="{Binding StatusColor}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="card">
+                                <StackPanel Spacing="5">
+                                    <TextBlock Text="How to Connect" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text="1. Run Power Realms on another PC" Foreground="Gray"/>
+                                    <TextBlock Text="2. Find its IP address (e.g. 192.168.1.100)" Foreground="Gray"/>
+                                    <TextBlock Text="3. Enter IP:5001 in the field above" Foreground="Gray"/>
+                                    <TextBlock Text="4. Click Connect" Foreground="Gray"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Nodes Tab -->
+                <TabItem>
+                    <ScrollViewer>
+                        <StackPanel Spacing="20">
+                            <TextBlock Text="Nodes" Classes="title"/>
+                            
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <Button Content="Register This Machine" Command="{Binding RegisterNodeCommand}" Classes="primary"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="Registered Nodes" FontSize="16" FontWeight="Bold"/>
+                                    <ListBox ItemsSource="{Binding Nodes}" MaxHeight="400">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Classes="card" Margin="0,5">
+                                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                                                        <StackPanel Grid.Column="0">
+                                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                                            <TextBlock Text="{Binding Id}" FontSize="10" Foreground="Gray"/>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="1" Margin="20,0">
+                                                            <TextBlock Text="CPU" Foreground="Gray" FontSize="10"/>
+                                                            <TextBlock Text="{Binding CpuPower, StringFormat='{}{0:F0}%'}"/>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="2" Margin="20,0">
+                                                            <TextBlock Text="GPU" Foreground="Gray" FontSize="10"/>
+                                                            <TextBlock Text="{Binding GpuPower, StringFormat='{}{0:F0}%'}"/>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="3" Margin="20,0">
+                                                            <TextBlock Text="Rating" Foreground="Gray" FontSize="10"/>
+                                                            <TextBlock Text="{Binding Rating, StringFormat='{}{0:F1}'}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Pools Tab -->
+                <TabItem>
+                    <ScrollViewer>
+                        <StackPanel Spacing="20">
+                            <TextBlock Text="Pools" Classes="title"/>
+                            
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <Button Content="Create New Pool" Command="{Binding CreatePoolCommand}" Classes="primary"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="card">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="Active Pools" FontSize="16" FontWeight="Bold"/>
+                                    <ListBox ItemsSource="{Binding Pools}" MaxHeight="400">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Classes="card" Margin="0,5">
+                                                    <Grid ColumnDefinitions="*,Auto">
+                                                        <StackPanel Grid.Column="0">
+                                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16"/>
+                                                            <TextBlock Text="{Binding Id}" FontSize="10" Foreground="Gray"/>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="1">
+                                                            <TextBlock Text="{Binding Type}" Foreground="#e94560"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Border>
+    </Grid>
+</Window>
