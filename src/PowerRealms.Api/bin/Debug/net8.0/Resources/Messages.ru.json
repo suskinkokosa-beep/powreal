@@ -1,0 +1,77 @@
+{
+  "General": {
+    "AppName": "Power Realms",
+    "Welcome": "Добро пожаловать в Power Realms",
+    "Success": "Операция выполнена успешно",
+    "Error": "Произошла ошибка",
+    "NotFound": "Ресурс не найден",
+    "Unauthorized": "У вас нет прав для выполнения этого действия",
+    "ValidationError": "Ошибка валидации"
+  },
+  "Auth": {
+    "LoginSuccess": "Вход выполнен успешно",
+    "LoginFailed": "Неверное имя пользователя или пароль",
+    "RegisterSuccess": "Регистрация успешна",
+    "UserExists": "Пользователь уже существует",
+    "InvalidCredentials": "Неверные учётные данные"
+  },
+  "Pool": {
+    "Created": "Пул успешно создан",
+    "Joined": "Вы успешно присоединились к пулу",
+    "NotFound": "Пул не найден",
+    "AccessDenied": "У вас нет доступа к этому пулу",
+    "AlreadyMember": "Вы уже являетесь участником этого пула",
+    "InvalidPassword": "Неверный пароль пула",
+    "MachineLimit": "Достигнут лимит машин",
+    "Types": {
+      "Public": "Публичный",
+      "Private": "Приватный",
+      "Premium": "Премиум"
+    }
+  },
+  "Withdrawal": {
+    "Requested": "Запрос на вывод отправлен",
+    "Confirmed": "Вывод подтверждён",
+    "Rejected": "Вывод отклонён",
+    "Completed": "Вывод завершён",
+    "InsufficientBalance": "Недостаточный баланс",
+    "InvalidAmount": "Неверная сумма вывода",
+    "PendingApproval": "Вывод ожидает подтверждения"
+  },
+  "GameBoost": {
+    "SessionStarted": "Сессия GameBoost начата",
+    "SessionEnded": "Сессия GameBoost завершена",
+    "NodeNotAvailable": "Нода недоступна",
+    "SlotNotAvailable": "Слот GameBoost недоступен",
+    "PartialRefund": "Частичный возврат из-за проблем с качеством",
+    "QualityMetrics": {
+      "Latency": "Задержка",
+      "FPS": "Кадры в секунду",
+      "Uptime": "Процент времени работы"
+    }
+  },
+  "Marketplace": {
+    "OfferCreated": "Предложение успешно создано",
+    "OfferPurchased": "Предложение успешно приобретено",
+    "OfferNotFound": "Предложение не найдено",
+    "InsufficientFunds": "Недостаточно средств",
+    "Categories": {
+      "ComputeTime": "Вычислительное время",
+      "GameBoostSlot": "Слот GameBoost",
+      "PrivateAccess": "Доступ к приватному слоту",
+      "Cosmetics": "Косметика"
+    }
+  },
+  "Hold": {
+    "Created": "Hold создан",
+    "Released": "Hold освобождён",
+    "Cancelled": "Hold отменён",
+    "Pending": "Hold ожидает"
+  },
+  "Roles": {
+    "GlobalAdmin": "Глобальный администратор",
+    "Owner": "Владелец пула",
+    "Officer": "Офицер",
+    "Member": "Участник"
+  }
+}
