@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: ./src/PowerRealms.Api
+      dockerfile: Dockerfile
+    image: powerrealms/api:latest
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=powerrealms;Username=poweruser;Password=powerpass
+      - Jwt__Key=ReplaceThisWithSecureKeyOfAtLeast32Chars!
+      - Jwt__Issuer=PowerRealms
+      - Jwt__Audience=PowerRealmsUsers
+      - SeedAdmin__Username=admin
+      - SeedAdmin__Password=admin123!
+      - SeedAdmin__IsGlobalAdmin=true
+    ports:
+      - 5000:5000
+      - 5001:5001
+    restart: on-failure
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: powerrealms
+      POSTGRES_USER: poweruser
+      POSTGRES_PASSWORD: powerpass
+    ports:
+      - 5432:5432
+    volumes:
+      - pr-db-data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pr-db-data:
